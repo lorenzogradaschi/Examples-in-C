@@ -53,6 +53,7 @@ struct Node* minValueNode(struct Node* node);
 struct Node* deleteNode(struct Node* root, int data);
 struct Node* search(struct Node* root, int data);
 void stampaArray();
+void inserisciElementoInArray(int array[10], int dim);
 void menu();
 
 int main() {
@@ -914,17 +915,26 @@ struct Node* search(struct Node* root, int data) {
 }
 
 void inserisciElementoInArray(int array[10], int dim){
-    dim = 5;
-    for(int i = 0; i<= dim; i++){
-        print("insersci numero nell'array");
+    // Fissiamo dim a 5 all'interno della funzione
+    int fixedDim = 5; // Usa una variabile interna per evitare confusione
+    if (fixedDim > 10) {
+        printf("Dimensione troppo grande\n");
+        return; // Esci dalla funzione se fixedDim è maggiore della dimensione dell'array
+    }
+    
+    // Inserisci i numeri nell'array
+    for(int i = 0; i < fixedDim; i++){
+        printf("inserisci numero nell'array: ");
         scanf("%d", &array[i]);
     }
-    for(int i = 0; i <= dim ;i++){
+
+    // Controlla i numeri nell'array
+    for(int i = 0; i < fixedDim; i++){
         if(array[i] >= 4){
-            printf("");
+            printf("Numero maggiore o uguale a 4 trovato: %d\n", array[i]);
         }
-        if(array[i-1-dim]<=0){
-            printf("uscito dall'array"); // possibile che esca dall'indice
+        if(i > 0 && array[i - 1] <= 0){ // Cambia la condizione per evitare accessi fuori dai limiti
+            printf("uscito dall'array\n"); // Messaggio informativo
         }
     }
 }
