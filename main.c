@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <math.h>
 
 // Prototipi delle funzioni
 void sommaArray();
@@ -27,6 +28,8 @@ void contaVocali(char str[]);
 void scambiaVariabili(int *a, int *b);
 void modificaValore(int *a);
 void sommaVettori(int *arr1, int *arr2, int *somma, int n);
+int fattoriale(int n);
+double interesseComposto(double P, double r, int t);
 void menu();
 
 int main() {
@@ -62,6 +65,8 @@ void menu() {
         printf("21. Scambia due variabili\n");
         printf("22. Modifica valore tramite puntatore\n");
         printf("23. Somma di due vettori\n");
+        printf("24. Calcolo del fattoriale\n");
+        printf("25. Calcolo dell'interesse composto\n");
         printf("0. Esci\n");
         printf("Scegli un'opzione: ");
         scanf("%d", &scelta);
@@ -181,6 +186,25 @@ void menu() {
                     printf("%d ", somma[i]);
                 }
                 printf("\n");
+                break;
+            }
+            case 24: {
+                int n;
+                printf("Inserisci un numero: ");
+                scanf("%d", &n);
+                printf("Fattoriale di %d: %d\n", n, fattoriale(n));
+                break;
+            }
+            case 25: {
+                double P, r;
+                int t;
+                printf("Inserisci il capitale iniziale (P): ");
+                scanf("%lf", &P);
+                printf("Inserisci il tasso di interesse (r): ");
+                scanf("%lf", &r);
+                printf("Inserisci il numero di periodi (t): ");
+                scanf("%d", &t);
+                printf("Interesse composto: %.2lf\n", interesseComposto(P, r, t));
                 break;
             }
             case 0: printf("Uscita...\n"); break;
@@ -530,4 +554,20 @@ void sommaVettori(int *arr1, int *arr2, int *somma, int n) {
     for (int i = 0; i < n; i++) {
         somma[i] = arr1[i] + arr2[i];
     }
+}
+
+// Funzione ricorsiva per calcolare il fattoriale
+int fattoriale(int n) {
+    if (n <= 1)
+        return 1;
+    else
+        return n * fattoriale(n - 1);
+}
+
+// Funzione ricorsiva per calcolare l'interesse composto
+double interesseComposto(double P, double r, int t) {
+    if (t == 0)
+        return P;
+    else
+        return (1 + r) * interesseComposto(P, r, t - 1);
 }
