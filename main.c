@@ -4,6 +4,8 @@
 #include <ctype.h>
 #include <math.h>
 
+#define MAX 100
+
 // Prototipi delle funzioni
 void sommaArray();
 void prodottoArray();
@@ -30,6 +32,26 @@ void modificaValore(int *a);
 void sommaVettori(int *arr1, int *arr2, int *somma, int n);
 int fattoriale(int n);
 double interesseComposto(double P, double r, int t);
+void insert(int element);
+void heapify(int i);
+int extractMax();
+void printHeap();
+void push(int element);
+int pop();
+int peek();
+void printStack();
+void enqueue(int element);
+int dequeue();
+int peekQueue();
+void printQueue();
+struct Node* newNode(int data);
+void inorder(struct Node* root);
+void preorder(struct Node* root);
+void postorder(struct Node* root);
+struct Node* insertNode(struct Node* node, int data);
+struct Node* minValueNode(struct Node* node);
+struct Node* deleteNode(struct Node* root, int data);
+struct Node* search(struct Node* root, int data);
 void menu();
 
 int main() {
@@ -67,6 +89,19 @@ void menu() {
         printf("23. Somma di due vettori\n");
         printf("24. Calcolo del fattoriale\n");
         printf("25. Calcolo dell'interesse composto\n");
+        printf("26. Inserimento in un heap\n");
+        printf("27. Estrazione massima da un heap\n");
+        printf("28. Visualizzazione di un heap\n");
+        printf("29. Inserimento in uno stack\n");
+        printf("30. Estrazione da uno stack\n");
+        printf("31. Visualizzazione di uno stack\n");
+        printf("32. Inserimento in una queue\n");
+        printf("33. Estrazione da una queue\n");
+        printf("34. Visualizzazione di una queue\n");
+        printf("35. Inserimento in un albero binario\n");
+        printf("36. Eliminazione da un albero binario\n");
+        printf("37. Ricerca in un albero binario\n");
+        printf("38. Visualizzazione in ordine, preordine, postordine di un albero binario\n");
         printf("0. Esci\n");
         printf("Scegli un'opzione: ");
         scanf("%d", &scelta);
@@ -205,6 +240,89 @@ void menu() {
                 printf("Inserisci il numero di periodi (t): ");
                 scanf("%d", &t);
                 printf("Interesse composto: %.2lf\n", interesseComposto(P, r, t));
+                break;
+            }
+            case 26: {
+                int element;
+                printf("Inserisci un elemento da inserire nell'heap: ");
+                scanf("%d", &element);
+                insert(element);
+                break;
+            }
+            case 27: {
+                int max = extractMax();
+                if (max != -1)
+                    printf("Elemento massimo estratto: %d\n", max);
+                break;
+            }
+            case 28: printHeap(); break;
+            case 29: {
+                int element;
+                printf("Inserisci un elemento da inserire nello stack: ");
+                scanf("%d", &element);
+                push(element);
+                break;
+            }
+            case 30: {
+                int element = pop();
+                if (element != -1)
+                    printf("Elemento estratto dallo stack: %d\n", element);
+                break;
+            }
+            case 31: printStack(); break;
+            case 32: {
+                int element;
+                printf("Inserisci un elemento da inserire nella queue: ");
+                scanf("%d", &element);
+                enqueue(element);
+                break;
+            }
+            case 33: {
+                int element = dequeue();
+                if (element != -1)
+                    printf("Elemento estratto dalla queue: %d\n", element);
+                break;
+            }
+            case 34: printQueue(); break;
+            case 35: {
+                static struct Node* root = NULL;
+                int element;
+                printf("Inserisci un elemento da inserire nell'albero: ");
+                scanf("%d", &element);
+                root = insertNode(root, element);
+                break;
+            }
+            case 36: {
+                static struct Node* root = NULL;
+                int element;
+                printf("Inserisci un elemento da eliminare dall'albero: ");
+                scanf("%d", &element);
+                root = deleteNode(root, element);
+                break;
+            }
+            case 37: {
+                static struct Node* root = NULL;
+                int element;
+                printf("Inserisci un elemento da cercare nell'albero: ");
+                scanf("%d", &element);
+                struct Node* result = search(root, element);
+                if (result != NULL)
+                    printf("Elemento %d trovato nell'albero.\n", element);
+                else
+                    printf("Elemento %d non trovato nell'albero.\n", element);
+                break;
+            }
+            case 38: {
+                static struct Node* root = NULL;
+                printf("Inorder traversal: ");
+                inorder(root);
+                printf("\n");
+                printf("Preorder traversal: ");
+                preorder(root);
+                printf("\n");
+                printf("Postorder traversal: ");
+                postorder(root);
+                printf("\n");
                 break;
             }
             case 0: printf("Uscita...\n"); break;
@@ -570,4 +688,214 @@ double interesseComposto(double P, double r, int t) {
         return P;
     else
         return (1 + r) * interesseComposto(P, r, t - 1);
+}
+
+// Heap
+int heap[MAX];
+int size = 0;
+
+void insert(int element) {
+    if (size >= MAX) {
+        printf("Heap overflow\n");
+        return;
+    }
+    heap[size++] = element;
+    int i = size - 1;
+    while (i != 0 && heap[(i - 1) / 2] < heap[i]) {
+        int temp = heap[i];
+        heap[i] = heap[(i - 1) / 2];
+        heap[(i - 1) / 2] = temp;
+        i = (i - 1) / 2;
+    }
+}
+
+void heapify(int i) {
+    int largest = i;
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
+    if (left < size && heap[left] > heap[largest])
+        largest = left;
+    if (right < size && heap[right] > heap[largest])
+        largest = right;
+    if (largest != i) {
+        int temp = heap[i];
+        heap[i] = heap[largest];
+        heap[largest] = temp;
+        heapify(largest);
+    }
+}
+
+int extractMax() {
+    if (size <= 0)
+        return -1;
+    if (size == 1)
+        return heap[--size];
+    int root = heap[0];
+    heap[0] = heap[--size];
+    heapify(0);
+    return root;
+}
+
+void printHeap() {
+    for (int i = 0; i < size; i++) {
+        printf("%d ", heap[i]);
+    }
+    printf("\n");
+}
+
+// Stack
+int stack[MAX];
+int top = -1;
+
+void push(int element) {
+    if (top >= MAX - 1) {
+        printf("Stack overflow\n");
+        return;
+    }
+    stack[++top] = element;
+}
+
+int pop() {
+    if (top < 0) {
+        printf("Stack underflow\n");
+        return -1;
+    }
+    return stack[top--];
+}
+
+int peek() {
+    if (top < 0) {
+        printf("Stack is empty\n");
+        return -1;
+    }
+    return stack[top];
+}
+
+void printStack() {
+    for (int i = 0; i <= top; i++) {
+        printf("%d ", stack[i]);
+    }
+    printf("\n");
+}
+
+// Queue
+int queue[MAX];
+int front = 0;
+int rear = 0;
+
+void enqueue(int element) {
+    if (rear >= MAX) {
+        printf("Queue overflow\n");
+        return;
+    }
+    queue[rear++] = element;
+}
+
+int dequeue() {
+    if (front == rear) {
+        printf("Queue underflow\n");
+        return -1;
+    }
+    return queue[front++];
+}
+
+int peekQueue() {
+    if (front == rear) {
+        printf("Queue is empty\n");
+        return -1;
+    }
+    return queue[front];
+}
+
+void printQueue() {
+    for (int i = front; i < rear; i++) {
+        printf("%d ", queue[i]);
+    }
+    printf("\n");
+}
+
+// Albero Binario
+struct Node {
+    int data;
+    struct Node* left;
+    struct Node* right;
+};
+
+struct Node* newNode(int data) {
+    struct Node* node = (struct Node*)malloc(sizeof(struct Node));
+    node->data = data;
+    node->left = NULL;
+    node->right = NULL;
+    return node;
+}
+
+void inorder(struct Node* root) {
+    if (root != NULL) {
+        inorder(root->left);
+        printf("%d ", root->data);
+        inorder(root->right);
+    }
+}
+
+void preorder(struct Node* root) {
+    if (root != NULL) {
+        printf("%d ", root->data);
+        preorder(root->left);
+        preorder(root->right);
+    }
+}
+
+void postorder(struct Node* root) {
+    if (root != NULL) {
+        postorder(root->left);
+        postorder(root->right);
+        printf("%d ", root->data);
+    }
+}
+
+struct Node* insertNode(struct Node* node, int data) {
+    if (node == NULL) return newNode(data);
+    if (data < node->data)
+        node->left = insertNode(node->left, data);
+    else if (data > node->data)
+        node->right = insertNode(node->right, data);
+    return node;
+}
+
+struct Node* minValueNode(struct Node* node) {
+    struct Node* current = node;
+    while (current && current->left != NULL)
+        current = current->left;
+    return current;
+}
+
+struct Node* deleteNode(struct Node* root, int data) {
+    if (root == NULL) return root;
+    if (data < root->data)
+        root->left = deleteNode(root->left, data);
+    else if (data > root->data)
+        root->right = deleteNode(root->right, data);
+    else {
+        if (root->left == NULL) {
+            struct Node* temp = root->right;
+            free(root);
+            return temp;
+        } else if (root->right == NULL) {
+            struct Node* temp = root->left;
+            free(root);
+            return temp;
+        }
+        struct Node* temp = minValueNode(root->right);
+        root->data = temp->data;
+        root->right = deleteNode(root->right, temp->data);
+    }
+    return root;
+}
+
+struct Node* search(struct Node* root, int data) {
+    if (root == NULL || root->data == data)
+        return root;
+    if (root->data < data)
+        return search(root->right, data);
+    return search(root->left, data);
 }
