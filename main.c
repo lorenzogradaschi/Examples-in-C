@@ -52,6 +52,7 @@ struct Node* insertNode(struct Node* node, int data);
 struct Node* minValueNode(struct Node* node);
 struct Node* deleteNode(struct Node* root, int data);
 struct Node* search(struct Node* root, int data);
+void stampaArray();
 void menu();
 
 int main() {
@@ -102,6 +103,7 @@ void menu() {
         printf("36. Eliminazione da un albero binario\n");
         printf("37. Ricerca in un albero binario\n");
         printf("38. Visualizzazione in ordine, preordine, postordine di un albero binario\n");
+        printf("39. Stampa Array\n\n");
         printf("0. Esci\n");
         printf("Scegli un'opzione: ");
         scanf("%d", &scelta);
@@ -325,10 +327,21 @@ void menu() {
                 printf("\n");
                 break;
             }
+            case 39: {
+               stampaArray();  
+               break;
+            }
             case 0: printf("Uscita...\n"); break;
             default: printf("Opzione non valida!\n"); break;
         }
     } while (scelta != 0);
+}
+
+void stampaArray(){
+    int arr[] = {1,2,3,4,5};
+    for(int i = 0; i< 5; i++){
+        printf(" %d ", arr[i]);
+    }
 }
 
 // Funzione per sommare gli elementi di un array
@@ -676,10 +689,10 @@ void sommaVettori(int *arr1, int *arr2, int *somma, int n) {
 
 // Funzione ricorsiva per calcolare il fattoriale
 int fattoriale(int n) {
-    if (n <= 1)
+    if (n <= 1) 
         return 1;
     else
-        return n * fattoriale(n - 1);
+        return n * fattoriale(n - 1); 
 }
 
 // Funzione ricorsiva per calcolare l'interesse composto
@@ -898,4 +911,20 @@ struct Node* search(struct Node* root, int data) {
     if (root->data < data)
         return search(root->right, data);
     return search(root->left, data);
+}
+
+void inserisciElementoInArray(int array[10], int dim){
+    dim = 5;
+    for(int i = 0; i<= dim; i++){
+        print("insersci numero nell'array");
+        scanf("%d", &array[i]);
+    }
+    for(int i = 0; i <= dim ;i++){
+        if(array[i] >= 4){
+            printf("");
+        }
+        if(array[i-1-dim]<=0){
+            printf("uscito dall'array"); // possibile che esca dall'indice
+        }
+    }
 }
